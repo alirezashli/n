@@ -1,0 +1,108 @@
+import React from "react";
+import { CCard, CCardBody, CCardGroup, CCardHeader } from "@coreui/react";
+import {
+  CChartBar,
+  CChartLine,
+  CChartDoughnut,
+  CChartRadar,
+  CChartPie,
+  CChartPolarArea,
+} from "@coreui/react-chartjs";
+import { DocsLink } from "src/reusable";
+
+const Charts = () => {
+
+  useEffect(() => {
+    let ServicesConfig = {
+      method: "get",
+      url: `http://46.209.219.53:5003/home/GetAllUser`,
+    };
+    axios(ServicesConfig)
+      .then((Response) => {
+        console.log(Response)
+        if (Response.status === 200) {
+          SetappUsersCount(Response.data.length)
+          // SetjobsCount(Response.data.data.jobsCount)
+          // SetbusinessUserCount(Response.data.data.businessUserCount)
+          // SetcommentsCount(Response.data.data.commentsCount)
+        }
+      })
+      .catch((error) => {
+        if(error.response.data.statusCode>=400 && error.response.data.statusCode<500){
+          MyNotify.Error.DataErrorNotify(error.response.data.message);
+        }
+        if(error.response.data.statusCode>=500){
+          MyNotify.Error.ServerErrorNotify(error.response.data.message);
+        }
+      })
+}, []);
+  return (
+    <CCardGroup columns className="cols-2">
+      <CCard>
+        <CCardHeader>
+          Bar Chart
+          <DocsLink href="http://www.chartjs.org" />
+        </CCardHeader>
+        <CCardBody>
+          <CChartBar
+            datasets={[
+              {
+                label: "GitHub Commits",
+                backgroundColor: "#f87979",
+                data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11],
+              },
+            ]}
+            labels="months"
+            options={{
+              tooltips: {
+                enabled: true,
+              },
+            }}
+          />
+        </CCardBody>
+      </CCard>
+
+      <CCard>
+        <CCardHeader>Doughnut Chart</CCardHeader>
+        <CCardBody>
+          <CChartDoughnut
+            datasets={[
+              {
+                backgroundColor: ["#41B883", "#E46651", "#00D8FF", "#DD1B16"],
+                data: [40, 20, 80, 10],
+              },
+            ]}
+            labels={["VueJs", "EmberJs", "ReactJs", "AngularJs"]}
+            options={{
+              tooltips: {
+                enabled: true,
+              },
+            }}
+          />
+        </CCardBody>
+      </CCard>
+
+      <CCard>
+        <CCardHeader>Pie Chart</CCardHeader>
+        <CCardBody>
+          <CChartPie
+            datasets={[
+              {
+                backgroundColor: ["#41B883", "#E46651", "#00D8FF", "#DD1B16"],
+                data: [40, 20, 80, 10],
+              },
+            ]}
+            labels={["VueJs", "EmberJs", "ReactJs", "AngularJs"]}
+            options={{
+              tooltips: {
+                enabled: true,
+              },
+            }}
+          />
+        </CCardBody>
+      </CCard>
+    </CCardGroup>
+  );
+};
+
+export default Charts;
